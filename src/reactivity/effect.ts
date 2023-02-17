@@ -30,15 +30,11 @@ export function track(target, key) {
     }
     dep.add(activeEffect)
 }
-
 export function trigger(target, key) {
     let depsMap = targetMap.get(target) //获取目标对象
     let dep = depsMap.get(key) //取值
-    for (let effect of dep) {
-        if (effect.scheduler) {
-            effect.scheduler()
-        } else {
-            effect.run()
-        }
-    }
+    // 这里挂的调度器来同步拦截的数据的改变。
+    dep.forEach(effect => {
+        effect.scheduler ? effect.scheduler() : effect.run()
+    })
 }
