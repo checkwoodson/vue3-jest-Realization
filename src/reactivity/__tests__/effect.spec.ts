@@ -1,5 +1,5 @@
 import { reactive } from '../reactivity';
-import { effect } from '../effect';
+import { effect, stop } from '../effect';
 describe('effect', function () {
     it('effect part', function () {
         // * 首先定义一个响应式对象
@@ -56,4 +56,18 @@ describe('effect', function () {
         // should have run
         expect(dummy).toBe(2);
     });
+    it('stop', () => {
+        let dummy;
+        const obj = reactive({ props: 1 })
+        const runner = effect(() => {
+            dummy = obj.props
+        })
+        obj.props = 2;
+        expect(dummy).toBe(2);
+        stop(runner);
+        obj.props = 3;
+        expect(dummy).toBe(2);
+        runner()
+        expect(dummy).toBe(3)
+    })
 });
