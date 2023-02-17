@@ -1,5 +1,5 @@
 import { reactive } from '../reactivity';
-import { effect, stop } from '../effect';
+import { effect, stop, onStop } from '../effect';
 describe('effect', function () {
     it('effect part', function () {
         // * 首先定义一个响应式对象
@@ -69,5 +69,15 @@ describe('effect', function () {
         expect(dummy).toBe(2);
         runner()
         expect(dummy).toBe(3)
+    });
+    it('onStop',()=>{
+        const obj = reactive({ prop: 1})
+        const onStop = jest.fn()
+        let dummy;
+        const runner = effect(()=>{
+            dummy = obj.foo;
+        },{ onStop })
+        stop(runner)
+        expect(onStop).toHaveBeenCalledTimes(1)
     })
 });
