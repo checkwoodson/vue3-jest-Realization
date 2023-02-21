@@ -13,3 +13,23 @@ export function reactive(raw: Object) {
     },
   });
 }
+
+export function readonly(target) {
+  return new Proxy(target, {
+    get(target, key) {
+      return Reflect.get(target, key);
+    },
+    set(target,key,value) {
+      console.warn('只能读取，不能修改')
+      return true
+    }
+  })
+}
+
+function createGetter(isReadonly = false){
+  return function get(target,key){
+    const res = Reflect.get(target,key)
+    !isReadonly && track(target,key)
+    return res
+  }
+}
