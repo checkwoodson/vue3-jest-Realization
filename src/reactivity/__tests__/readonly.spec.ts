@@ -1,4 +1,4 @@
-import { readonly } from '../reactivity'
+import { readonly, isReadOnly } from '../reactivity'
 describe('readonly', () => {
     it('只读操作，不可修改', () => {
         const original = { foo: 1, bar: { baz: 2 } }
@@ -8,6 +8,9 @@ describe('readonly', () => {
         expect(wrapped.foo).toBe(1)
         wrapped.foo = 2
         expect(wrapped.foo).toBe(1)
+
+        expect(isReadOnly(wrapped)).toBe(true)
+        expect(isReadOnly(original)).toBe(false)
 
     })
     it('should call console.warn when set', () =>{

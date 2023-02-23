@@ -12,3 +12,7 @@ export function isReactive(value) {
   // setting one of value's property to a reactive object will make it reactive
   return !!value['is_reactive']
 }
+
+export function isReadOnly(value){
+  return !!value['is_readonly']
+}
