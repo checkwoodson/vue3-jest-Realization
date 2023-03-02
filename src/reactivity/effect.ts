@@ -1,6 +1,7 @@
 import { extend } from '../shared'
 // 响应式依赖副作用
 let activeEffect
+let shouldTrack: Boolean = false
 class ReactiveEffect {
     private _fn
     deps = []
@@ -15,7 +16,7 @@ class ReactiveEffect {
     }
     // 停止依赖收集
     stop() {
-        this.active && cleanEffect(this), (this.onStop && this.onStop()), (this.active = false)
+        this.active && cleanEffect(this), (this.onStop && this.onStop()), (this.active = false), (shouldTrack = true)
     }
 }
 
@@ -34,6 +35,7 @@ export function stop(fn) {
 let targetMap = new WeakMap()
 export function track(target, key) {
     let depsMap = targetMap.get(target)
+    if (shouldTrack || !activeEffect) return;
     if (!depsMap) {
         targetMap.set(target, (depsMap = new Map()))
     }
@@ -41,7 +43,6 @@ export function track(target, key) {
     if (!dep) {
         depsMap.set(key, (dep = new Set()))
     }
-    if(!activeEffect) return;
     dep.add(activeEffect)
     activeEffect.deps.push(dep)
 }

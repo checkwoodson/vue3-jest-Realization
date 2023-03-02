@@ -1,5 +1,5 @@
 import { reactive } from '../reactivity';
-import { effect, stop, onStop } from '../effect';
+import { effect, stop } from '../effect';
 describe('effect', function () {
     it('effect part', function () {
         // * 首先定义一个响应式对象
@@ -65,7 +65,8 @@ describe('effect', function () {
         obj.props = 2;
         expect(dummy).toBe(2);
         stop(runner);
-        obj.props = 3;
+        // obj.props = 3;
+        obj.props++
         expect(dummy).toBe(2);
         runner()
         expect(dummy).toBe(3)
