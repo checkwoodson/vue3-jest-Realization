@@ -1,9 +1,10 @@
 import { track, trigger } from './effect'
+import { reactiveFlag } from './enum/reactivty';
 class ProxyInterface {
   createGetter(isReadonly = false) {
     return (target, key) => {
-      if(key === 'is_reactive') return !isReadonly;
-      if(key === 'is_readonly') return isReadonly;
+      if(key === reactiveFlag.IS_REACTIVE) return !isReadonly;
+      if(key === reactiveFlag.IS_READONLY) return isReadonly;
       const res = Reflect.get(target, key)
       !isReadonly && track(target, key)
       return res
